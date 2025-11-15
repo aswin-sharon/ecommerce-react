@@ -3,7 +3,7 @@ import type { FormEvent } from "react"; // <-- type-only import
 import { Button, Form, Container, Row, Col, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import axios from "axios";
+import { ApiClient } from "../api/ApiClient.js"
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -18,12 +18,16 @@ const Login = () => {
 
     try {
       // Call your backend API
-      const res = await axios.post("https://your-api.com/login", {
-        email,
-        password,
+      // const res = await axios.post("http://localhost:5000/api/user/login", {
+      //   email,
+      //   password,
+      // });
+      const data = await ApiClient("/user/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
       });
-
-      const { token, user } = res.data;
+      console.log("====user data===", data);
+      const { token, user } = data;
 
       // Save user and token in context + localStorage
       login(token, user);
